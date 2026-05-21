@@ -79,6 +79,7 @@ void setup() {
   Serial.begin(115200);                 // Initialize Serial at 115200 baud for debug
   while (!Serial && millis() < 2000) {  // Wait briefly for Serial port (if required)
     delay(10);                          // Short delay while waiting for Serial
+    Serial.println("Waiting for initialising Serial Monitoring");
   }
 
   u8g2.begin();                         // Initialize the U8g2 OLED library
@@ -89,7 +90,7 @@ void setup() {
   u8g2.drawStr(0, 50, "Initializing..."); // Draw initialization message
   u8g2.sendBuffer();                    // Show splash on the OLED
 
-  lis3dhtr.begin(Wire);               // Initialize LIS3DHTR on I2C
+  lis3dhtr.begin(Wire, 0x19);               // Initialize LIS3DHTR on I2C
   if (!lis3dhtr.isConnection()) {       // Verify the sensor is reachable
     Serial.println("Failed to connect to LIS3DHTR"); // Log failure on Serial
     showError("LIS3DHTR not found", "Check wiring"); // Show error on OLED
@@ -99,7 +100,7 @@ void setup() {
   }
 
   lis3dhtr.setFullScaleRange(LIS3DHTR_RANGE_2G); // Configure accelerometer range
-  lis3dhtr.setOutputDataRate(LIS3DHTR_DATARATE_100HZ);  // Configure data rate
+  lis3dhtr.setOutputDataRate(LIS3DHTR_DATARATE_25HZ);  // Configure data rate
 
   preferences.begin(PREF_NAMESPACE, false); // Open NVS namespace for reading/writing
   stepCount = preferences.getULong(PREF_KEY, 0); // Load saved step count (default 0)
